@@ -8,15 +8,20 @@
 
 import Foundation
 import SQLite
+import UIKit
 
 class DataSetManager {
 
-    static let dbFilePath = "laser_v1.0.db"
-    static let imageDirPath = "images"
+    static let dbFile = "laser_v1.0.db"
+    static let imageDir = "images"
     
     static func docsDirPath() -> String {
         let dirPaths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         return dirPaths[0]
+    }
+    
+    static func imagesDirPath() -> String {
+        return "\(docsDirPath())/\(imageDir)"
     }
     
     var _db: Connection?
@@ -25,7 +30,7 @@ class DataSetManager {
         get {
             if _db == nil {
                 do {
-                    let dbFilePath = "\(DataSetManager.docsDirPath())/\(DataSetManager.dbFilePath)"
+                    let dbFilePath = "\(DataSetManager.docsDirPath())/\(DataSetManager.dbFile)"
                     _db = try Connection(dbFilePath)
                 } catch {
                     print("Failed to connect to DB: \(error)")
@@ -84,4 +89,72 @@ class DataSetManager {
     func numberOfDataSets() -> Int {
         return db.scalar(dataSet.count)
     }
+    
+    func saveDataSet(dataSetName: String, baseImage: UIImage, baseImageCreatedTime: NSDate, images: [UIImage], imageCorrelations: [Double], imageCreatedTimes: [NSDate]) {
+        // insert DataSet
+        let dataSetInsert = dataSet.insert(name <- dataSetName, numberOfImages <- Int64(images.count), createTime <- NSDate())
+        var dataSetId: Int64!
+        do {
+            let rowId = try db.run(dataSetInsert)
+            for row in try db.prepare(dataSet.filter(rowid == rowId)) {
+                dataSetId = row[id]
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        let dataSetPath = "\(DataSetManager.imagesDirPath())/\(dataSetId)"
+        let fileManager = NSFileManager.defaultManager()
+        
+        if !fileManager.fileExistsAtPath(dataSetPath) {
+            do {
+                try fileManager.createDirectoryAtPath(dataSetPath, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        // insert images
+        for i in 0...(images.count - 1) {
+            let imageInsert = self.image.insert(self.dataSetId <- dataSetId, crossCorrelation <- imageCorrelations[i], isBaseImage <- 0, createTime <- imageCreatedTimes[i])
+            var imageId: Int64!
+            do {
+                let rowId = try db.run(imageInsert)
+                for row in try db.prepare(self.image.filter(rowid == rowId)) {
+                    imageId = row[id]
+                }
+                let imagePath = "\(dataSetPath)/\(imageId).jpg"
+                UIImageJPEGRepresentation(images[i], 1.0)?.writeToFile(imagePath, atomically: true)
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        // insert baseimage
+        let imageInsert = self.image.insert(self.dataSetId <- dataSetId, isBaseImage <- 1, createTime <- baseImageCreatedTime)
+        var imageId: Int64!
+        do {
+            let rowId = try db.run(imageInsert)
+            for row in try db.prepare(self.image.filter(rowid == rowId)) {
+                imageId = row[id]
+            }
+            let imagePath = "\(dataSetPath)/\(imageId).jpg"
+            UIImageJPEGRepresentation(baseImage, 1.0)?.writeToFile(imagePath, atomically: true)
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
+    func fetchAllDataSets() -> [[String: AnyObject]] {
+        var dataSets = [[String: AnyObject]]()
+        do {
+            for row in try db.prepare(self.dataSet.select(name, createTime, numberOfImages)) {
+                dataSets.append(["name": row[name]!, "createTime": row[createTime], "numberOfImages": Int(row[numberOfImages])])
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        return dataSets
+    }
+
 }

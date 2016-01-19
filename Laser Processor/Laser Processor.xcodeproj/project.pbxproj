@@ -15,6 +15,8 @@
 		B2DFE2A21C4D5FE900B65901 /* Laser_ProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFE2A11C4D5FE900B65901 /* Laser_ProcessorTests.swift */; };
 		B2DFE2AE1C4D621600B65901 /* DataSetManageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFE2AD1C4D621600B65901 /* DataSetManageTableViewController.swift */; };
 		B2DFE2B31C4D676B00B65901 /* DataSetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFE2B21C4D676B00B65901 /* DataSetManager.swift */; };
+		B2DFE2B51C4DD19300B65901 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */; };
+		B2DFE2B71C4DD1CA00B65901 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2DFE2B61C4DD1CA00B65901 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,8 @@
 		B2DFE2A31C4D5FE900B65901 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B2DFE2AD1C4D621600B65901 /* DataSetManageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetManageTableViewController.swift; path = ViewControllers/DataSetManageTableViewController.swift; sourceTree = "<group>"; };
 		B2DFE2B21C4D676B00B65901 /* DataSetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetManager.swift; path = Classes/DataSetManager.swift; sourceTree = "<group>"; };
+		B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CaptureViewController.swift; path = ViewControllers/CaptureViewController.swift; sourceTree = "<group>"; };
+		B2DFE2B61C4DD1CA00B65901 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2DFE2B71C4DD1CA00B65901 /* AVFoundation.framework in Frameworks */,
 				02C7401E6FD341C4E071C00F /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,6 +71,7 @@
 		649587982F1CB250DB3ADFB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B2DFE2B61C4DD1CA00B65901 /* AVFoundation.framework */,
 				34612E085A56D85306A6B4A4 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -118,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				B2DFE2AD1C4D621600B65901 /* DataSetManageTableViewController.swift */,
+				B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -293,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2DFE28D1C4D5FE900B65901 /* AppDelegate.swift in Sources */,
+				B2DFE2B51C4DD19300B65901 /* CaptureViewController.swift in Sources */,
 				B2DFE2B31C4D676B00B65901 /* DataSetManager.swift in Sources */,
 				B2DFE2AE1C4D621600B65901 /* DataSetManageTableViewController.swift in Sources */,
 			);

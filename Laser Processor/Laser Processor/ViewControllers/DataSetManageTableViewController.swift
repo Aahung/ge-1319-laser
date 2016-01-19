@@ -11,11 +11,15 @@ import UIKit
 class DataSetManageTableViewController: UITableViewController {
 
     var dataSetManager: DataSetManager!
+    var dataSets: [[String: AnyObject]]?
+    
+    let dateFormatter = NSDateFormatter()
     
     var emptyLabel: UILabel?
     
     override func viewDidLoad() {
         dataSetManager = DataSetManager()
+        self.dataSets = dataSetManager.fetchAllDataSets()
         
         super.viewDidLoad()
 
@@ -23,6 +27,11 @@ class DataSetManageTableViewController: UITableViewController {
         
         initEmptyLabel()
         initTableViewStyles()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.dataSets = dataSetManager.fetchAllDataSets()
+        self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
     }
 
     // MARK: - Setups
@@ -57,7 +66,7 @@ class DataSetManageTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfRows = dataSetManager.numberOfDataSets()
+        let numberOfRows = self.dataSets!.count
         if numberOfRows > 0 {
             self.emptyLabel?.hidden = true
         } else {
@@ -69,54 +78,20 @@ class DataSetManageTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("dataset_cell", forIndexPath: indexPath)
 
-        // Configure the cell...
+        cell.textLabel?.text = self.dataSets![indexPath.row]["name"] as? String
+        
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        cell.detailTextLabel?.text = "\(dateFormatter.stringFromDate(self.dataSets![indexPath.row]["createTime"] as! NSDate)), contains \(self.dataSets![indexPath.row]["numberOfImages"]!) images"
 
         return cell
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 50
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }
