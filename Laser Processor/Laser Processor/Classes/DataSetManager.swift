@@ -154,7 +154,7 @@ class DataSetManager {
         } catch {
             print("Error: \(error)")
         }
-        return dataSets
+        return dataSets.reverse()
     }
 
 }
