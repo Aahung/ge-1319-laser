@@ -145,16 +145,46 @@ class DataSetManager {
         }
     }
     
-    func fetchAllDataSets() -> [[String: AnyObject]] {
-        var dataSets = [[String: AnyObject]]()
+    func fetchAllDataSets() -> [DataSet] {
+        var dataSets = [DataSet]()
         do {
-            for row in try db.prepare(self.dataSet.select(name, createTime, numberOfImages)) {
-                dataSets.append(["name": row[name]!, "createTime": row[createTime], "numberOfImages": Int(row[numberOfImages])])
+            for row in try db.prepare(self.dataSet.select(id, name, createTime, numberOfImages)) {
+                dataSets.append(DataSet(id: row[id], name: row[name]!, numberOfImages: Int(row[numberOfImages]), createdTime: row[createTime]))
             }
         } catch {
             print("Error: \(error)")
         }
         return dataSets.reverse()
     }
+    
+    func fetchAllImages(dataSetId: Int64) -> (baseImage: DataSetImage, images: [DataSetImage]) {
+        var baseImage: DataSetImage!
+        var images = [DataSetImage]()
+        
+        do {
+            for row in try db.prepare(self.image.select(id, self.dataSetId, isBaseImage, crossCorrelation, createTime).filter(self.dataSetId == dataSetId)) {
+                if row[isBaseImage] > 0 {
+                    baseImage = DataSetImage(id: row[id], dataSetId: dataSetId, isBaseImage: true, correlation: nil, createdTime: row[createTime])
+                } else {
+                    images.append(DataSetImage(id: row[id], dataSetId: dataSetId, isBaseImage: false, correlation: row[crossCorrelation], createdTime: row[createTime]))
+                }
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        return (baseImage, images)
+    }
 
+    func deleteDataSet(dataSetId: Int64) {
+        do {
+            try db.run(dataSet.filter(id == dataSetId).delete())
+            try db.run(image.filter(self.dataSetId == dataSetId).delete())
+            let dataSetPath = "\(DataSetManager.imagesDirPath())/\(dataSetId)"
+            try NSFileManager.defaultManager().removeItemAtPath(dataSetPath)
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
 }

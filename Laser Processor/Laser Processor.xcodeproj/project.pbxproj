@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		02C7401E6FD341C4E071C00F /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34612E085A56D85306A6B4A4 /* Pods.framework */; };
+		B2DC5B321C4F4635007268BC /* DataSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B311C4F4635007268BC /* DataSetViewController.swift */; };
+		B2DC5B351C4F476D007268BC /* DataSetImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */; };
+		B2DC5B371C4F4B66007268BC /* DataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B361C4F4B66007268BC /* DataSet.swift */; };
+		B2DC5B391C4F4CDC007268BC /* DataSetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B381C4F4CDC007268BC /* DataSetImage.swift */; };
 		B2DFE28D1C4D5FE900B65901 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFE28C1C4D5FE900B65901 /* AppDelegate.swift */; };
 		B2DFE2921C4D5FE900B65901 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2DFE2901C4D5FE900B65901 /* Main.storyboard */; };
 		B2DFE2941C4D5FE900B65901 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2DFE2931C4D5FE900B65901 /* Assets.xcassets */; };
@@ -33,6 +37,10 @@
 		34612E085A56D85306A6B4A4 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		416545480B8F7B7972CDA3AA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		74F23665ADE11C6B87445034 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		B2DC5B311C4F4635007268BC /* DataSetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetViewController.swift; path = ViewControllers/DataSetViewController.swift; sourceTree = "<group>"; };
+		B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetImageTableViewCell.swift; path = Views/DataSetImageTableViewCell.swift; sourceTree = "<group>"; };
+		B2DC5B361C4F4B66007268BC /* DataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSet.swift; path = Classes/DataSet.swift; sourceTree = "<group>"; };
+		B2DC5B381C4F4CDC007268BC /* DataSetImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetImage.swift; path = Classes/DataSetImage.swift; sourceTree = "<group>"; };
 		B2DFE2891C4D5FE900B65901 /* Laser Processor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Laser Processor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2DFE28C1C4D5FE900B65901 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2DFE2911C4D5FE900B65901 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -77,6 +85,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B2DC5B331C4F46FE007268BC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		B2DFE2801C4D5FE900B65901 = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +116,7 @@
 		B2DFE28B1C4D5FE900B65901 /* Laser Processor */ = {
 			isa = PBXGroup;
 			children = (
+				B2DC5B331C4F46FE007268BC /* Views */,
 				B2DFE2AC1C4D615200B65901 /* ViewControllers */,
 				B2DFE2B11C4D674300B65901 /* Classes */,
 				B2DFE28C1C4D5FE900B65901 /* AppDelegate.swift */,
@@ -124,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				B2DFE2AD1C4D621600B65901 /* DataSetManageTableViewController.swift */,
+				B2DC5B311C4F4635007268BC /* DataSetViewController.swift */,
 				B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */,
 			);
 			name = ViewControllers;
@@ -133,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				B2DFE2B21C4D676B00B65901 /* DataSetManager.swift */,
+				B2DC5B361C4F4B66007268BC /* DataSet.swift */,
+				B2DC5B381C4F4CDC007268BC /* DataSetImage.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -301,7 +321,11 @@
 			files = (
 				B2DFE28D1C4D5FE900B65901 /* AppDelegate.swift in Sources */,
 				B2DFE2B51C4DD19300B65901 /* CaptureViewController.swift in Sources */,
+				B2DC5B351C4F476D007268BC /* DataSetImageTableViewCell.swift in Sources */,
 				B2DFE2B31C4D676B00B65901 /* DataSetManager.swift in Sources */,
+				B2DC5B321C4F4635007268BC /* DataSetViewController.swift in Sources */,
+				B2DC5B371C4F4B66007268BC /* DataSet.swift in Sources */,
+				B2DC5B391C4F4CDC007268BC /* DataSetImage.swift in Sources */,
 				B2DFE2AE1C4D621600B65901 /* DataSetManageTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

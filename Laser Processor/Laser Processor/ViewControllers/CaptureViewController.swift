@@ -246,11 +246,11 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             })
             self.calculationOperationQueue.addOperationWithBlock({ () -> Void in
                 DataSetManager().saveDataSet(alertController.textFields![0].text!, baseImage: self.baseImage!, baseImageCreatedTime: self.baseImageTookTime!, images: self.images, imageCorrelations: self.imageCorrelations, imageCreatedTimes: self.imageTookTimes)
-            })
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                PKHUD.sharedHUD.hide()
-                self.dismissViewControllerAnimated(true, completion: nil)
-                assert(NSThread.isMainThread())
+                NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                    PKHUD.sharedHUD.hide()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    assert(NSThread.isMainThread())
+                })
             })
         }))
         assert(NSThread.isMainThread())

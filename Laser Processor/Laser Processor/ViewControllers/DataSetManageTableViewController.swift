@@ -11,7 +11,7 @@ import UIKit
 class DataSetManageTableViewController: UITableViewController {
 
     var dataSetManager: DataSetManager!
-    var dataSets: [[String: AnyObject]]?
+    var dataSets: [DataSet]?
     
     let dateFormatter = NSDateFormatter()
     
@@ -23,8 +23,6 @@ class DataSetManageTableViewController: UITableViewController {
         
         super.viewDidLoad()
 
-        self.clearsSelectionOnViewWillAppear = true
-        
         initEmptyLabel()
         initTableViewStyles()
     }
@@ -56,6 +54,7 @@ class DataSetManageTableViewController: UITableViewController {
     
     func initTableViewStyles() {
         // remove extra rows
+        self.clearsSelectionOnViewWillAppear = true
         self.tableView.tableFooterView = UIView(frame: CGRectZero)
     }
     
@@ -78,10 +77,10 @@ class DataSetManageTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("dataset_cell", forIndexPath: indexPath)
 
-        cell.textLabel?.text = self.dataSets![indexPath.row]["name"] as? String
+        cell.textLabel?.text = self.dataSets![indexPath.row].name
         
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        cell.detailTextLabel?.text = "\(dateFormatter.stringFromDate(self.dataSets![indexPath.row]["createTime"] as! NSDate)), contains \(self.dataSets![indexPath.row]["numberOfImages"]!) images"
+        cell.detailTextLabel?.text = "\(dateFormatter.stringFromDate(self.dataSets![indexPath.row].createdTime)), contains \(self.dataSets![indexPath.row].numberOfImages!) images"
 
         return cell
     }
@@ -92,6 +91,34 @@ class DataSetManageTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
+    }
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        var imageCount = 0
+        for dataSet in dataSets! {
+            imageCount += dataSet.numberOfImages
+        }
+        return "in total \(self.dataSets!.count) datasets, \(imageCount) images"
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            let dataSetId = dataSets![indexPath.row].id
+            dataSetManager.deleteDataSet(dataSetId)
+            dataSets?.removeAtIndex(indexPath.row)
+            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "dataset_detail" {
+            let destViewController = segue.destinationViewController as! DataSetViewController
+            destViewController.dataSet = self.dataSets![(self.tableView.indexPathForSelectedRow!.row)]
+        }
     }
     
 }
