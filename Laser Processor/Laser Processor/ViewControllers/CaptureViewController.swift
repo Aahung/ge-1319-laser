@@ -232,6 +232,11 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
 
     @IBAction func finishCapture(sender: AnyObject) {
+        if self.images.count == 0 {
+            self.dismiss(self)
+            return
+        }
+        
         if timer != nil {
             timer?.invalidate()
             timer = nil
