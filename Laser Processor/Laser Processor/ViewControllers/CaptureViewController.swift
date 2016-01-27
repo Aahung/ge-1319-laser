@@ -200,14 +200,16 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     func startCapture() {
+        if self.timer != nil {
+            self.timer?.invalidate()
+            self.timer = nil
+            return
+        }
+        
         let countDownTime = Int(ceil(Double(Preference.getBaseImageDelay()) / 1000.0))
         setCountDown(countDownTime) { () -> Void in
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                if self.timer != nil {
-                    self.timer?.invalidate()
-                    self.timer = nil
-                    return
-                }
+                
                 self.controlButton?.enabled = false
                 self.controlButton?.animateToType(.buttonOkType)
                 do {
