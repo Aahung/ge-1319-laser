@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Form.FORMDefaultStyle
 
 class DataSetManageTableViewController: UITableViewController {
 
@@ -110,7 +111,7 @@ class DataSetManageTableViewController: UITableViewController {
             let dataSetId = dataSets![indexPath.row].id
             dataSetManager.deleteDataSet(dataSetId)
             dataSets?.removeAtIndex(indexPath.row)
-            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
         }
     }
     
@@ -120,5 +121,4 @@ class DataSetManageTableViewController: UITableViewController {
             destViewController.dataSet = self.dataSets![(self.tableView.indexPathForSelectedRow!.row)]
         }
     }
-    
 }

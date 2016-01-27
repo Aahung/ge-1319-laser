@@ -6,4 +6,6 @@ use_frameworks!
 
 pod 'SQLite.swift', '~> 0.9.2'
 pod 'VBFPopFlatButton'
-pod "PKHUD"
+pod 'PKHUD'
+pod 'XLForm', '~> 3.0'
+pod 'SwiftyUserDefaults'

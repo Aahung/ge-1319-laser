@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		02C7401E6FD341C4E071C00F /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34612E085A56D85306A6B4A4 /* Pods.framework */; };
+		B2088E2B1C5749C7001F4199 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */; };
+		B212DF211C57EEF80009B4F6 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = B212DF201C57EEF80009B4F6 /* Preference.swift */; };
 		B2DC5B321C4F4635007268BC /* DataSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B311C4F4635007268BC /* DataSetViewController.swift */; };
 		B2DC5B351C4F476D007268BC /* DataSetImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */; };
 		B2DC5B371C4F4B66007268BC /* DataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B361C4F4B66007268BC /* DataSet.swift */; };
@@ -37,6 +39,8 @@
 		34612E085A56D85306A6B4A4 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		416545480B8F7B7972CDA3AA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		74F23665ADE11C6B87445034 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferenceViewController.swift; path = ViewControllers/PreferenceViewController.swift; sourceTree = "<group>"; };
+		B212DF201C57EEF80009B4F6 /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preference.swift; path = Classes/Preference.swift; sourceTree = "<group>"; };
 		B2DC5B311C4F4635007268BC /* DataSetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetViewController.swift; path = ViewControllers/DataSetViewController.swift; sourceTree = "<group>"; };
 		B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetImageTableViewCell.swift; path = Views/DataSetImageTableViewCell.swift; sourceTree = "<group>"; };
 		B2DC5B361C4F4B66007268BC /* DataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSet.swift; path = Classes/DataSet.swift; sourceTree = "<group>"; };
@@ -85,6 +89,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B2088E261C57483D001F4199 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		B2DC5B331C4F46FE007268BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +127,7 @@
 		B2DFE28B1C4D5FE900B65901 /* Laser Processor */ = {
 			isa = PBXGroup;
 			children = (
+				B2088E261C57483D001F4199 /* Resources */,
 				B2DC5B331C4F46FE007268BC /* Views */,
 				B2DFE2AC1C4D615200B65901 /* ViewControllers */,
 				B2DFE2B11C4D674300B65901 /* Classes */,
@@ -143,6 +155,7 @@
 				B2DFE2AD1C4D621600B65901 /* DataSetManageTableViewController.swift */,
 				B2DC5B311C4F4635007268BC /* DataSetViewController.swift */,
 				B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */,
+				B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -153,6 +166,7 @@
 				B2DFE2B21C4D676B00B65901 /* DataSetManager.swift */,
 				B2DC5B361C4F4B66007268BC /* DataSet.swift */,
 				B2DC5B381C4F4CDC007268BC /* DataSetImage.swift */,
+				B212DF201C57EEF80009B4F6 /* Preference.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -319,6 +333,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B212DF211C57EEF80009B4F6 /* Preference.swift in Sources */,
+				B2088E2B1C5749C7001F4199 /* PreferenceViewController.swift in Sources */,
 				B2DFE28D1C4D5FE900B65901 /* AppDelegate.swift in Sources */,
 				B2DFE2B51C4DD19300B65901 /* CaptureViewController.swift in Sources */,
 				B2DC5B351C4F476D007268BC /* DataSetImageTableViewCell.swift in Sources */,

@@ -33,6 +33,8 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBOutlet weak var buttomBarView: UIView!
     var controlButton: VBFPopFlatButton?
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var countDownLabel: UILabel!
+    
     
     override func viewDidLoad() {
         configureVideoCapture()
@@ -46,7 +48,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         calculationOperationQueue.maxConcurrentOperationCount = 1
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewWillDisappear(animated: Bool) {
         captureSession.stopRunning()
     }
     
@@ -76,7 +78,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 alertController.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
                 self.presentViewController(alertController, animated: true, completion: nil)
             }
-            captureSession.sessionPreset = AVCaptureSessionPresetPhoto
+            captureSession.sessionPreset = Preference.getPhotoResolutionAsPreset()
             stillImageOutput.outputSettings = [AVVideoCodecKey:AVVideoCodecJPEG]
             if captureSession.canAddOutput(stillImageOutput) {
                 captureSession.addOutput(stillImageOutput)
@@ -145,6 +147,10 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection) {
                 (imageDataSampleBuffer, error) -> Void in
+                if error != nil {
+                    print("Photo taking error: \(error)")
+                    return
+                }
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
                 
                 // save image to memory
@@ -194,28 +200,33 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     func startCapture() {
-        if timer != nil {
-            timer?.invalidate()
-            timer = nil
-            return
+        let countDownTime = Int(ceil(Double(Preference.getBaseImageDelay()) / 1000.0))
+        setCountDown(countDownTime) { () -> Void in
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                if self.timer != nil {
+                    self.timer?.invalidate()
+                    self.timer = nil
+                    return
+                }
+                self.controlButton?.enabled = false
+                self.controlButton?.animateToType(.buttonOkType)
+                do {
+                    try self.captureDevice?.lockForConfiguration()
+                    self.captureDevice?.focusMode = .Locked
+                    self.captureDevice?.unlockForConfiguration()
+                } catch {
+                    print("Error: \(error)")
+                }
+                
+                if self.baseImage == nil {
+                    self.capture(true)
+                }
+                self.timer = NSTimer.scheduledTimerWithTimeInterval(Preference.getShootingIntervalAsSeconds(), target: self, selector: "captureNormalImage", userInfo: nil, repeats: true)
+                self.controlButton?.enabled = true
+                self.controlButton?.animateToType(.buttonPausedType)
+                assert(NSThread.isMainThread())
+            })
         }
-        self.controlButton?.enabled = false
-        self.controlButton?.animateToType(.buttonOkType)
-        do {
-            try captureDevice?.lockForConfiguration()
-            captureDevice?.focusMode = .Locked
-            captureDevice?.unlockForConfiguration()
-        } catch {
-            print("Error: \(error)")
-        }
-        
-        if self.baseImage == nil {
-            capture(true)
-        }
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "captureNormalImage", userInfo: nil, repeats: true)
-        self.controlButton?.enabled = true
-        self.controlButton?.animateToType(.buttonPausedType)
-        assert(NSThread.isMainThread())
     }
 
     @IBAction func finishCapture(sender: AnyObject) {
@@ -257,7 +268,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    // MARK: -calculation method
+    // MARK: - calculation method
     func crossCorrelation(image: UIImage) -> Double {
         assert(self.baseImagePixels != nil)
         
@@ -288,5 +299,42 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
         
         return Double(dotProduct) * Double(dotProduct) / Double(baseDotProduct) / Double(imageDotProduct)
+    }
+    
+    // MARK: - count down
+    var countDownTime: Int!
+    var countDownHandler: (()->Void)!
+    var countDownTimer: NSTimer?
+    
+    func setCountDown(second: Int, handler: (()->Void)) {
+        countDownTime = second
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.countDownLabel.text = "\(self.countDownTime)"
+            self.countDownLabel.hidden = false
+        }
+        countDownHandler = handler
+        
+        // remove previous count timer if exists
+        if countDownTimer != nil {
+            countDownTimer?.invalidate()
+            countDownTimer = nil
+        }
+        countDownTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "countDown", userInfo: nil, repeats: false)
+    }
+    
+    func countDown() {
+        if countDownTime == 0 {
+            NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+                self.countDownLabel.hidden = true
+            }
+        }
+        countDownTime = countDownTime - 1
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            self.countDownLabel.text = "\(self.countDownTime)"
+        }
+        if countDownTime == 0 {
+            countDownHandler()
+        }
+        countDownTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "countDown", userInfo: nil, repeats: false)
     }
 }
