@@ -126,6 +126,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBAction func dismiss(sender: AnyObject) {
         self.timer?.invalidate()
         self.timer = nil
+        calculationOperationQueue.cancelAllOperations()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     // MARK: - capture methods
