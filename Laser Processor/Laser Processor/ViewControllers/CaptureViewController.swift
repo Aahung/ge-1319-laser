@@ -18,9 +18,10 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var captureVideoPreviewLayer:AVCaptureVideoPreviewLayer?
     var captureDevice: AVCaptureDevice?
     
-    var baseImage: UIImage?
+    let baseImageCount = Preference.getBaseImageCount()
+    var baseImages = [UIImage]()
     var baseImageTookTime: NSDate?
-    var baseImagePixels: [UInt8]?
+    var baseImagePixels: [UInt32]?
     var images = [UIImage]()
     var imageTookTimes = [NSDate]()
     var imageCorrelations = [Double]()
@@ -131,14 +132,16 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     func updateStatusLabel() {
         NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
             assert(NSThread.isMainThread())
-            self.statusLabel.text = "\((self.baseImage == nil ? "0":"base")) + \(self.imageCorrelations.count)/\(self.images.count)"
+            self.statusLabel.text = "base (\(self.baseImages.count)) + \(self.imageCorrelations.count)/\(self.images.count)"
         })
     }
     
     func capture(isBaseImage: Bool) {
-        
+        var isBaseImage = isBaseImage
         NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-            if !isBaseImage {
+            if isBaseImage {
+                self.controlButton?.animateToType(.buttonOkType)
+            } else {
                 self.controlButton?.animateToType(.buttonDownTriangleType)
             }
         })
@@ -156,8 +159,10 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 // save image to memory
                 let image = UIImage(data: imageData)!
                 if isBaseImage {
-                    self.baseImage = image
-                    self.baseImageTookTime = NSDate()
+                    if self.baseImages.count < self.baseImageCount {
+                        self.baseImages.append(image)
+                        self.baseImageTookTime = NSDate()
+                    }
                 } else {
                     self.images.append(image)
                     self.imageTookTimes.append(NSDate())
@@ -165,23 +170,37 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 
                 // change button state and label text
                 NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                    if !isBaseImage {
-                        self.controlButton?.animateToType(.buttonPausedType)
-                    }
+                    self.controlButton?.animateToType(.buttonPausedType)
                     self.updateStatusLabel()
                 })
                 
                 self.calculationOperationQueue.addOperationWithBlock({ () -> Void in
                     if isBaseImage {
-                        let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage))
-                        let imagePixels = CFDataGetBytePtr(pixelData)
-                        let baseImageRow = Int(image.size.width)
-                        let baseImageCol = Int(image.size.height)
-                        self.baseImagePixels = [UInt8](count: baseImageRow * baseImageCol, repeatedValue: 0)
-                        for i in 0...(baseImageRow - 1) {
-                            for j in 0...(baseImageCol - 1) {
-                                let index = j * baseImageRow + i
-                                self.baseImagePixels![index] = imagePixels[index * 4]
+                        if self.baseImages.count == self.baseImageCount {
+                            let baseImageRow = Int(image.size.width)
+                            let baseImageCol = Int(image.size.height)
+                            self.baseImagePixels = [UInt32](count: baseImageRow * baseImageCol, repeatedValue: 0)
+                            for i in 0...(baseImageRow - 1) {
+                                for j in 0...(baseImageCol - 1) {
+                                    let index = j * baseImageRow + i
+                                    self.baseImagePixels![index] = 0
+                                }
+                            }
+                            for baseImage in self.baseImages {
+                                let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(baseImage.CGImage))
+                                let imagePixels = CFDataGetBytePtr(pixelData)
+                                for i in 0...(baseImageRow - 1) {
+                                    for j in 0...(baseImageCol - 1) {
+                                        let index = j * baseImageRow + i
+                                        self.baseImagePixels![index] += UInt32(imagePixels[index * 4])
+                                    }
+                                }
+                            }
+                            for i in 0...(baseImageRow - 1) {
+                                for j in 0...(baseImageCol - 1) {
+                                    let index = j * baseImageRow + i
+                                    self.baseImagePixels![index] /= UInt32(self.baseImageCount)
+                                }
                             }
                         }
                     } else {
@@ -199,6 +218,19 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         self.capture(false)
     }
     
+    func captureBaseImage() {
+        if self.baseImages.count < self.baseImageCount {
+            self.capture(true)
+        } else {
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                self.controlButton?.enabled = true
+                assert(NSThread.isMainThread())
+            })
+            self.timer?.invalidate()
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(Preference.getShootingIntervalAsSeconds(), target: self, selector: "captureNormalImage", userInfo: nil, repeats: true)
+        }
+    }
+    
     func startCapture() {
         if self.timer != nil {
             self.timer?.invalidate()
@@ -211,7 +243,6 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 
                 self.controlButton?.enabled = false
-                self.controlButton?.animateToType(.buttonOkType)
                 do {
                     try self.captureDevice?.lockForConfiguration()
                     self.captureDevice?.focusMode = .Locked
@@ -220,12 +251,8 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                     print("Error: \(error)")
                 }
                 
-                if self.baseImage == nil {
-                    self.capture(true)
-                }
-                self.timer = NSTimer.scheduledTimerWithTimeInterval(Preference.getShootingIntervalAsSeconds(), target: self, selector: "captureNormalImage", userInfo: nil, repeats: true)
-                self.controlButton?.enabled = true
-                self.controlButton?.animateToType(.buttonPausedType)
+                self.timer = NSTimer.scheduledTimerWithTimeInterval(Preference.getShootingIntervalAsSeconds(), target: self, selector: "captureBaseImage", userInfo: nil, repeats: true)
+                
                 assert(NSThread.isMainThread())
             })
         }
@@ -263,7 +290,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 PKHUD.sharedHUD.show()
             })
             self.calculationOperationQueue.addOperationWithBlock({ () -> Void in
-                DataSetManager().saveDataSet(alertController.textFields![0].text!, baseImage: self.baseImage!, baseImageCreatedTime: self.baseImageTookTime!, images: self.images, imageCorrelations: self.imageCorrelations, imageCreatedTimes: self.imageTookTimes)
+                DataSetManager().saveDataSet(alertController.textFields![0].text!, baseImages: self.baseImages, baseImageCreatedTime: self.baseImageTookTime!, images: self.images, imageCorrelations: self.imageCorrelations, imageCreatedTimes: self.imageTookTimes)
                 NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                     PKHUD.sharedHUD.hide()
                     self.dismissViewControllerAnimated(true, completion: nil)
@@ -282,30 +309,15 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage))
         let imagePixels = CFDataGetBytePtr(pixelData)
         
-        let baseImageRow = Int((self.baseImage?.size.width)!)
-        let baseImageCol = Int((self.baseImage?.size.height)!)
+        let baseImageRow = Int(self.baseImages[0].size.width)
+        let baseImageCol = Int(self.baseImages[0].size.height)
         let imageRow = Int(image.size.width)
         let imageCol = Int(image.size.height)
         
         assert(baseImageRow == imageRow)
         assert(baseImageCol == imageCol)
         
-        // 2d inner product
-        // algorithm modified from http://stackoverflow.com/a/6801185/2361752
-        var dotProduct: UInt64 = 0
-        var baseDotProduct: UInt64 = 0
-        var imageDotProduct: UInt64 = 0
-        for i in 0...(baseImageRow - 1) {
-            for j in 0...(baseImageCol - 1) {
-                let index = baseImageRow * j + i
-                let index4 = index * 4
-                dotProduct += UInt64(self.baseImagePixels![index]) * UInt64(imagePixels[index4])
-                baseDotProduct += UInt64(self.baseImagePixels![index]) * UInt64(self.baseImagePixels![index])
-                imageDotProduct += UInt64(imagePixels[index4]) * UInt64(imagePixels[index4])
-            }
-        }
-        
-        return Double(dotProduct) * Double(dotProduct) / Double(baseDotProduct) / Double(imageDotProduct)
+        return Algorithm.microShiftInnerProduct(self.baseImagePixels!, imagePixels: imagePixels, imageRow: imageRow, imageCol: imageCol, maxOffset: 2)
     }
     
     // MARK: - count down

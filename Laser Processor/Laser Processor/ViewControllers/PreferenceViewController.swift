@@ -34,6 +34,7 @@ class PreferenceViewController: XLFormViewController {
         let formValues = form.formValues()
         
         Preference.setBaseImageDelay(formValues["delay-base-images"] as! Int)
+        Preference.setBaseImageCount(formValues["base-images-count"] as! Int)
         Preference.setShootingInterval(formValues["shooting-interval"] as! Int)
         Preference.setPhotoResolution(formValues["photo-resolution"] as! String)
     }
@@ -54,6 +55,12 @@ class PreferenceViewController: XLFormViewController {
         row.cellConfigAtConfigure.setObject(5000, forKey: "stepControl.maximumValue")
         row.cellConfigAtConfigure.setObject(1000, forKey: "stepControl.minimumValue")
         row.cellConfigAtConfigure.setObject(100, forKey: "stepControl.stepValue")
+        section.addFormRow(row)
+        row = XLFormRowDescriptor(tag: "base-images-count", rowType: XLFormRowDescriptorTypeStepCounter, title: "Base image n")
+        row.value = Preference.getBaseImageCount()
+        row.cellConfigAtConfigure.setObject(5, forKey: "stepControl.maximumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.minimumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.stepValue")
         section.addFormRow(row)
         row = XLFormRowDescriptor(tag: "shooting-interval", rowType: XLFormRowDescriptorTypeStepCounter, title: "Shoot Interval (ms)")
         row.value = Preference.getShootingInterval()

@@ -10,6 +10,7 @@ import SwiftyUserDefaults
 import AVFoundation
 
 let delayBaseImageKey = DefaultsKey<Int?>("delay-base-images")
+let baseImageCountKey = DefaultsKey<Int?>("base-image-count")
 let shootingIntervalKey = DefaultsKey<Int?>("shooting-interval")
 let photoResolutionPresetKey = DefaultsKey<String?>("photo-resolution-preset")
 
@@ -24,6 +25,18 @@ class Preference: NSObject {
     
     class func setBaseImageDelay(value: Int) {
         Defaults[delayBaseImageKey] = value
+    }
+    
+    class func getBaseImageCount() -> Int {
+        if let value = Defaults[baseImageCountKey] {
+            return value
+        }
+        Defaults[baseImageCountKey] = 3
+        return getBaseImageCount()
+    }
+    
+    class func setBaseImageCount(value: Int) {
+        Defaults[baseImageCountKey] = value
     }
     
     class func getShootingInterval() -> Int {

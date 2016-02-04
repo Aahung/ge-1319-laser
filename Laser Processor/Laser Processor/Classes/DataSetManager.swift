@@ -90,7 +90,7 @@ class DataSetManager {
         return db.scalar(dataSet.count)
     }
     
-    func saveDataSet(dataSetName: String, baseImage: UIImage, baseImageCreatedTime: NSDate, images: [UIImage], imageCorrelations: [Double], imageCreatedTimes: [NSDate]) {
+    func saveDataSet(dataSetName: String, baseImages: [UIImage], baseImageCreatedTime: NSDate, images: [UIImage], imageCorrelations: [Double], imageCreatedTimes: [NSDate]) {
         // insert DataSet
         let dataSetInsert = dataSet.insert(name <- dataSetName, numberOfImages <- Int64(images.count), createTime <- NSDate())
         var dataSetId: Int64!
@@ -131,17 +131,19 @@ class DataSetManager {
         }
         
         // insert baseimage
-        let imageInsert = self.image.insert(self.dataSetId <- dataSetId, isBaseImage <- 1, createTime <- baseImageCreatedTime)
-        var imageId: Int64!
-        do {
-            let rowId = try db.run(imageInsert)
-            for row in try db.prepare(self.image.filter(rowid == rowId)) {
-                imageId = row[id]
+        for i in 0...(baseImages.count - 1) {
+            let imageInsert = self.image.insert(self.dataSetId <- dataSetId, crossCorrelation <- imageCorrelations[i], isBaseImage <- 1, createTime <- imageCreatedTimes[i])
+            var imageId: Int64!
+            do {
+                let rowId = try db.run(imageInsert)
+                for row in try db.prepare(self.image.filter(rowid == rowId)) {
+                    imageId = row[id]
+                }
+                let imagePath = "\(dataSetPath)/\(imageId).jpg"
+                UIImageJPEGRepresentation(baseImages[i], 1.0)?.writeToFile(imagePath, atomically: true)
+            } catch {
+                print("Error: \(error)")
             }
-            let imagePath = "\(dataSetPath)/\(imageId).jpg"
-            UIImageJPEGRepresentation(baseImage, 1.0)?.writeToFile(imagePath, atomically: true)
-        } catch {
-            print("Error: \(error)")
         }
     }
     
@@ -157,14 +159,14 @@ class DataSetManager {
         return dataSets.reverse()
     }
     
-    func fetchAllImages(dataSetId: Int64) -> (baseImage: DataSetImage, images: [DataSetImage]) {
-        var baseImage: DataSetImage!
+    func fetchAllImages(dataSetId: Int64) -> (baseImages: [DataSetImage], images: [DataSetImage]) {
+        var baseImages = [DataSetImage]()
         var images = [DataSetImage]()
         
         do {
             for row in try db.prepare(self.image.select(id, self.dataSetId, isBaseImage, crossCorrelation, createTime).filter(self.dataSetId == dataSetId)) {
                 if row[isBaseImage] > 0 {
-                    baseImage = DataSetImage(id: row[id], dataSetId: dataSetId, isBaseImage: true, correlation: nil, createdTime: row[createTime])
+                    baseImages.append(DataSetImage(id: row[id], dataSetId: dataSetId, isBaseImage: true, correlation: nil, createdTime: row[createTime]))
                 } else {
                     images.append(DataSetImage(id: row[id], dataSetId: dataSetId, isBaseImage: false, correlation: row[crossCorrelation], createdTime: row[createTime]))
                 }
@@ -173,7 +175,7 @@ class DataSetManager {
             print("Error: \(error)")
         }
         
-        return (baseImage, images)
+        return (baseImages, images)
     }
 
     func deleteDataSet(dataSetId: Int64) {
