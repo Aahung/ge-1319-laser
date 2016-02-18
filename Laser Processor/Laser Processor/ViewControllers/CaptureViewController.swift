@@ -28,6 +28,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     var timer: NSTimer?
     let calculationOperationQueue = NSOperationQueue()
+    var addedImageCount = 0
     
     var algorithm: Algorithm!
     // MARK: -viewDid** and outlets
@@ -153,6 +154,16 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         })
         
         assert(NSThread.isMainThread())
+        
+        if addedImageCount >= Preference.getImageCount() {
+            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+                self.controlButton?.animateToType(.buttonPausedType)
+                self.updateStatusLabel()
+            })
+            finishCapture(self)
+            return
+        }
+        
         if let videoConnection = stillImageOutput.connectionWithMediaType(AVMediaTypeVideo) {
             stillImageOutput.captureStillImageAsynchronouslyFromConnection(videoConnection) {
                 (imageDataSampleBuffer, error) -> Void in
@@ -173,6 +184,8 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                     self.images.append(image)
                     self.imageTookTimes.append(NSDate())
                 }
+                
+                self.addedImageCount = self.addedImageCount + 1
                 
                 // change button state and label text
                 NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in

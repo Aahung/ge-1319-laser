@@ -15,6 +15,7 @@ let shootingIntervalKey = DefaultsKey<Int?>("shooting-interval")
 let photoResolutionPresetKey = DefaultsKey<String?>("photo-resolution-preset")
 let maxShiftingKey = DefaultsKey<Int?>("max-shifting")
 let calculationDevicekey = DefaultsKey<String?>("calculation-device")
+let imageCountKey = DefaultsKey<Int?>("image-count")
 
 class Preference: NSObject {
     class func getBaseImageDelay() -> Int {
@@ -39,6 +40,18 @@ class Preference: NSObject {
     
     class func setBaseImageCount(value: Int) {
         Defaults[baseImageCountKey] = value
+    }
+    
+    class func getImageCount() -> Int {
+        if let value = Defaults[imageCountKey] {
+            return value
+        }
+        Defaults[imageCountKey] = 10
+        return getImageCount()
+    }
+    
+    class func setImageCount(value: Int) {
+        Defaults[imageCountKey] = value
     }
     
     class func getShootingInterval() -> Int {
