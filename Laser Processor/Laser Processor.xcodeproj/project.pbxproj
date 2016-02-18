@@ -9,8 +9,14 @@
 /* Begin PBXBuildFile section */
 		02C7401E6FD341C4E071C00F /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34612E085A56D85306A6B4A4 /* Pods.framework */; };
 		B207EC7C1C619EEE006AF5F9 /* Algorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B207EC7B1C619EEE006AF5F9 /* Algorithm.swift */; };
+		B207EC7E1C631BD2006AF5F9 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B207EC7D1C631BD2006AF5F9 /* Shaders.metal */; };
+		B207EC831C632C2E006AF5F9 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B207EC821C632C2E006AF5F9 /* MetalPerformanceShaders.framework */; };
+		B207EC851C632C33006AF5F9 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B207EC841C632C33006AF5F9 /* MetalKit.framework */; };
+		B207EC871C632C39006AF5F9 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B207EC861C632C39006AF5F9 /* Metal.framework */; };
 		B2088E2B1C5749C7001F4199 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */; };
 		B212DF211C57EEF80009B4F6 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = B212DF201C57EEF80009B4F6 /* Preference.swift */; };
+		B2726A041C63494400DF097F /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2726A031C63494400DF097F /* opencv2.framework */; };
+		B2726A081C634B4500DF097F /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = B2726A071C634B4500DF097F /* OpenCVWrapper.mm */; };
 		B2DC5B321C4F4635007268BC /* DataSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B311C4F4635007268BC /* DataSetViewController.swift */; };
 		B2DC5B351C4F476D007268BC /* DataSetImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */; };
 		B2DC5B371C4F4B66007268BC /* DataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B361C4F4B66007268BC /* DataSet.swift */; };
@@ -41,8 +47,16 @@
 		416545480B8F7B7972CDA3AA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		74F23665ADE11C6B87445034 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		B207EC7B1C619EEE006AF5F9 /* Algorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Algorithm.swift; path = Classes/Algorithm.swift; sourceTree = "<group>"; };
+		B207EC7D1C631BD2006AF5F9 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = Shaders.metal; path = GPU/Shaders.metal; sourceTree = "<group>"; };
+		B207EC821C632C2E006AF5F9 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
+		B207EC841C632C33006AF5F9 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		B207EC861C632C39006AF5F9 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferenceViewController.swift; path = ViewControllers/PreferenceViewController.swift; sourceTree = "<group>"; };
 		B212DF201C57EEF80009B4F6 /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preference.swift; path = Classes/Preference.swift; sourceTree = "<group>"; };
+		B2726A031C63494400DF097F /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		B2726A051C63499C00DF097F /* OpenCVWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenCVWrapper.h; path = Classes/OpenCVWrapper.h; sourceTree = "<group>"; };
+		B2726A061C6349D600DF097F /* LP-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LP-Bridging-Header.h"; sourceTree = "<group>"; };
+		B2726A071C634B4500DF097F /* OpenCVWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OpenCVWrapper.mm; path = Classes/OpenCVWrapper.mm; sourceTree = "<group>"; };
 		B2DC5B311C4F4635007268BC /* DataSetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetViewController.swift; path = ViewControllers/DataSetViewController.swift; sourceTree = "<group>"; };
 		B2DC5B341C4F476D007268BC /* DataSetImageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSetImageTableViewCell.swift; path = Views/DataSetImageTableViewCell.swift; sourceTree = "<group>"; };
 		B2DC5B361C4F4B66007268BC /* DataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSet.swift; path = Classes/DataSet.swift; sourceTree = "<group>"; };
@@ -67,6 +81,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2726A041C63494400DF097F /* opencv2.framework in Frameworks */,
+				B207EC871C632C39006AF5F9 /* Metal.framework in Frameworks */,
+				B207EC851C632C33006AF5F9 /* MetalKit.framework in Frameworks */,
+				B207EC831C632C2E006AF5F9 /* MetalPerformanceShaders.framework in Frameworks */,
 				B2DFE2B71C4DD1CA00B65901 /* AVFoundation.framework in Frameworks */,
 				02C7401E6FD341C4E071C00F /* Pods.framework in Frameworks */,
 			);
@@ -85,10 +103,22 @@
 		649587982F1CB250DB3ADFB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B2726A031C63494400DF097F /* opencv2.framework */,
+				B207EC861C632C39006AF5F9 /* Metal.framework */,
+				B207EC841C632C33006AF5F9 /* MetalKit.framework */,
+				B207EC821C632C2E006AF5F9 /* MetalPerformanceShaders.framework */,
 				B2DFE2B61C4DD1CA00B65901 /* AVFoundation.framework */,
 				34612E085A56D85306A6B4A4 /* Pods.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B207EC7F1C631BEB006AF5F9 /* GPU */ = {
+			isa = PBXGroup;
+			children = (
+				B207EC7D1C631BD2006AF5F9 /* Shaders.metal */,
+			);
+			name = GPU;
 			sourceTree = "<group>";
 		};
 		B2088E261C57483D001F4199 /* Resources */ = {
@@ -133,11 +163,13 @@
 				B2DC5B331C4F46FE007268BC /* Views */,
 				B2DFE2AC1C4D615200B65901 /* ViewControllers */,
 				B2DFE2B11C4D674300B65901 /* Classes */,
+				B207EC7F1C631BEB006AF5F9 /* GPU */,
 				B2DFE28C1C4D5FE900B65901 /* AppDelegate.swift */,
 				B2DFE2901C4D5FE900B65901 /* Main.storyboard */,
 				B2DFE2931C4D5FE900B65901 /* Assets.xcassets */,
 				B2DFE2951C4D5FE900B65901 /* LaunchScreen.storyboard */,
 				B2DFE2981C4D5FE900B65901 /* Info.plist */,
+				B2726A061C6349D600DF097F /* LP-Bridging-Header.h */,
 			);
 			path = "Laser Processor";
 			sourceTree = "<group>";
@@ -165,6 +197,8 @@
 		B2DFE2B11C4D674300B65901 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B2726A051C63499C00DF097F /* OpenCVWrapper.h */,
+				B2726A071C634B4500DF097F /* OpenCVWrapper.mm */,
 				B2DFE2B21C4D676B00B65901 /* DataSetManager.swift */,
 				B2DC5B361C4F4B66007268BC /* DataSet.swift */,
 				B2DC5B381C4F4CDC007268BC /* DataSetImage.swift */,
@@ -336,6 +370,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B207EC7E1C631BD2006AF5F9 /* Shaders.metal in Sources */,
 				B212DF211C57EEF80009B4F6 /* Preference.swift in Sources */,
 				B2088E2B1C5749C7001F4199 /* PreferenceViewController.swift in Sources */,
 				B2DFE28D1C4D5FE900B65901 /* AppDelegate.swift in Sources */,
@@ -347,6 +382,7 @@
 				B207EC7C1C619EEE006AF5F9 /* Algorithm.swift in Sources */,
 				B2DC5B391C4F4CDC007268BC /* DataSetImage.swift in Sources */,
 				B2DFE2AE1C4D621600B65901 /* DataSetManageTableViewController.swift in Sources */,
+				B2726A081C634B4500DF097F /* OpenCVWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,11 +513,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Laser Processor/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.xinhong.Laser-Processor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Laser Processor/LP-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -491,11 +533,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "Laser Processor/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "me.xinhong.Laser-Processor";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Laser Processor/LP-Bridging-Header.h";
 			};
 			name = Release;
 		};

@@ -37,6 +37,8 @@ class PreferenceViewController: XLFormViewController {
         Preference.setBaseImageCount(formValues["base-images-count"] as! Int)
         Preference.setShootingInterval(formValues["shooting-interval"] as! Int)
         Preference.setPhotoResolution(formValues["photo-resolution"] as! String)
+        Preference.setMaxShifting(formValues["max-shifting"] as! Int)
+        Preference.setCalculationDevice(formValues["calculation-device"] as! String)
     }
 
     // MARK: -setup form
@@ -76,10 +78,27 @@ class PreferenceViewController: XLFormViewController {
         section = XLFormSectionDescriptor.formSectionWithTitle("Photo Setting") as XLFormSectionDescriptor
         row = XLFormRowDescriptor(tag: "photo-resolution", rowType: XLFormRowDescriptorTypeSelectorPickerViewInline, title: "Resolution")
         row.value = Preference.getPhotoResolution()
-        let options = ["Full Resolution", "1920 x 1080", "1280 x 720", "640 x 480"]
+        var options = ["Full Resolution", "1920 x 1080", "1280 x 720", "640 x 480"]
         row.selectorOptions = options
         section.addFormRow(row)
         section.footerTitle = "The resolution is constraint by shutter speed."
+        
+        form.addFormSection(section)
+        
+        // Calculation Settings
+        section = XLFormSectionDescriptor.formSectionWithTitle("Calculation Setting") as XLFormSectionDescriptor
+        row = XLFormRowDescriptor(tag: "max-shifting", rowType: XLFormRowDescriptorTypeStepCounter, title: "Max Shift (px)")
+        row.value = Preference.getMaxShifting()
+        row.cellConfigAtConfigure.setObject(10, forKey: "stepControl.maximumValue")
+        row.cellConfigAtConfigure.setObject(0, forKey: "stepControl.minimumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.stepValue")
+        section.addFormRow(row)
+        
+        row = XLFormRowDescriptor(tag: "calculation-device", rowType: XLFormRowDescriptorTypeSelectorPickerViewInline, title: "Calculation Device")
+        row.value = Preference.getCalculationDevice()
+        options = ["CPU", "GPU", "OpenCV"]
+        row.selectorOptions = options
+        section.addFormRow(row)
         
         form.addFormSection(section)
         

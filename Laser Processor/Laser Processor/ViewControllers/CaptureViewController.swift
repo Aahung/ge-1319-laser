@@ -21,7 +21,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     let baseImageCount = Preference.getBaseImageCount()
     var baseImages = [UIImage]()
     var baseImageTookTime: NSDate?
-    var baseImagePixels: [UInt32]?
+    var baseImagePixels: [Float]?
     var images = [UIImage]()
     var imageTookTimes = [NSDate]()
     var imageCorrelations = [Double]()
@@ -29,6 +29,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var timer: NSTimer?
     let calculationOperationQueue = NSOperationQueue()
     
+    var algorithm: Algorithm!
     // MARK: -viewDid** and outlets
     
     @IBOutlet weak var buttomBarView: UIView!
@@ -47,6 +48,10 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         // one job a time, prevent race condition
         calculationOperationQueue.maxConcurrentOperationCount = 1
+        
+        if Preference.getCalculationDevice() == "GPU" {
+            algorithm = Algorithm()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -180,7 +185,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                         if self.baseImages.count == self.baseImageCount {
                             let baseImageRow = Int(image.size.width)
                             let baseImageCol = Int(image.size.height)
-                            self.baseImagePixels = [UInt32](count: baseImageRow * baseImageCol, repeatedValue: 0)
+                            self.baseImagePixels = [Float](count: baseImageRow * baseImageCol, repeatedValue: 0.0)
                             for i in 0...(baseImageRow - 1) {
                                 for j in 0...(baseImageCol - 1) {
                                     let index = j * baseImageRow + i
@@ -193,14 +198,14 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                                 for i in 0...(baseImageRow - 1) {
                                     for j in 0...(baseImageCol - 1) {
                                         let index = j * baseImageRow + i
-                                        self.baseImagePixels![index] += UInt32(imagePixels[index * 4])
+                                        self.baseImagePixels![index] += Float(imagePixels[index * 4])
                                     }
                                 }
                             }
                             for i in 0...(baseImageRow - 1) {
                                 for j in 0...(baseImageCol - 1) {
                                     let index = j * baseImageRow + i
-                                    self.baseImagePixels![index] /= UInt32(self.baseImageCount)
+                                    self.baseImagePixels![index] /= Float(self.baseImageCount)
                                 }
                             }
                         }
@@ -308,7 +313,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         assert(self.baseImagePixels != nil)
         
         let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage))
-        let imagePixels = CFDataGetBytePtr(pixelData)
+        let imagePixels = UnsafeMutablePointer<UInt8>(CFDataGetBytePtr(pixelData))
         
         let baseImageRow = Int(self.baseImages[0].size.width)
         let baseImageCol = Int(self.baseImages[0].size.height)
@@ -318,7 +323,13 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         assert(baseImageRow == imageRow)
         assert(baseImageCol == imageCol)
         
-        return Algorithm.microShiftInnerProduct(self.baseImagePixels!, imagePixels: imagePixels, imageRow: imageRow, imageCol: imageCol, maxOffset: 2)
+        if Preference.getCalculationDevice() == "GPU" {
+            return Double(algorithm.microShiftInnerProductGPU(self.baseImagePixels!, imagePixels: imagePixels, imageRow: imageRow, imageCol: imageCol, maxOffset: Preference.getMaxShifting()))
+        } else if Preference.getCalculationDevice() == "OpenCV" {
+            return Double(OpenCVWrapper.microShiftInnerProductGPU(self.baseImagePixels!, imagePixels: imagePixels, imageRow: Int32(imageRow), imageCol: Int32(imageCol), maxShift: Int32(Preference.getMaxShifting())))
+        } else {
+            return Double(Algorithm.microShiftInnerProduct(self.baseImagePixels!, imagePixels: imagePixels, imageRow: imageRow, imageCol: imageCol, maxOffset: Preference.getMaxShifting()))
+        }
     }
     
     // MARK: - count down

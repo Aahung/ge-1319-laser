@@ -13,6 +13,8 @@ let delayBaseImageKey = DefaultsKey<Int?>("delay-base-images")
 let baseImageCountKey = DefaultsKey<Int?>("base-image-count")
 let shootingIntervalKey = DefaultsKey<Int?>("shooting-interval")
 let photoResolutionPresetKey = DefaultsKey<String?>("photo-resolution-preset")
+let maxShiftingKey = DefaultsKey<Int?>("max-shifting")
+let calculationDevicekey = DefaultsKey<String?>("calculation-device")
 
 class Preference: NSObject {
     class func getBaseImageDelay() -> Int {
@@ -72,5 +74,29 @@ class Preference: NSObject {
         let dict = ["Full Resolution": AVCaptureSessionPresetPhoto,
             "1920 x 1080": AVCaptureSessionPreset1920x1080, "1280 x 720": AVCaptureSessionPreset1280x720, "640 x 480": AVCaptureSessionPreset640x480]
         return dict[getPhotoResolution() as String]!
+    }
+    
+    class func getMaxShifting() -> Int {
+        if let value = Defaults[maxShiftingKey] {
+            return value
+        }
+        Defaults[maxShiftingKey] = 2
+        return getMaxShifting()
+    }
+    
+    class func setMaxShifting(value: Int) {
+        Defaults[maxShiftingKey] = value
+    }
+    
+    class func getCalculationDevice() -> String {
+        if let value = Defaults[calculationDevicekey] {
+            return value
+        }
+        Defaults[calculationDevicekey] = "CPU"
+        return getCalculationDevice()
+    }
+    
+    class func setCalculationDevice(value: String) {
+        Defaults[calculationDevicekey] = value
     }
 }
