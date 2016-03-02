@@ -15,6 +15,9 @@
 		B207EC871C632C39006AF5F9 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B207EC861C632C39006AF5F9 /* Metal.framework */; };
 		B2088E2B1C5749C7001F4199 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */; };
 		B212DF211C57EEF80009B4F6 /* Preference.swift in Sources */ = {isa = PBXBuildFile; fileRef = B212DF201C57EEF80009B4F6 /* Preference.swift */; };
+		B23278611C76083A006B3C3D /* PlotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23278601C76083A006B3C3D /* PlotView.swift */; };
+		B23278631C760E92006B3C3D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B23278621C760E92006B3C3D /* QuartzCore.framework */; };
+		B23278651C760E97006B3C3D /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B23278641C760E97006B3C3D /* Accelerate.framework */; };
 		B2726A041C63494400DF097F /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2726A031C63494400DF097F /* opencv2.framework */; };
 		B2726A081C634B4500DF097F /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = B2726A071C634B4500DF097F /* OpenCVWrapper.mm */; };
 		B2DC5B321C4F4635007268BC /* DataSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DC5B311C4F4635007268BC /* DataSetViewController.swift */; };
@@ -53,6 +56,9 @@
 		B207EC861C632C39006AF5F9 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferenceViewController.swift; path = ViewControllers/PreferenceViewController.swift; sourceTree = "<group>"; };
 		B212DF201C57EEF80009B4F6 /* Preference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preference.swift; path = Classes/Preference.swift; sourceTree = "<group>"; };
+		B23278601C76083A006B3C3D /* PlotView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlotView.swift; path = ViewControllers/PlotView.swift; sourceTree = "<group>"; };
+		B23278621C760E92006B3C3D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		B23278641C760E97006B3C3D /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		B2726A031C63494400DF097F /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		B2726A051C63499C00DF097F /* OpenCVWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenCVWrapper.h; path = Classes/OpenCVWrapper.h; sourceTree = "<group>"; };
 		B2726A061C6349D600DF097F /* LP-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LP-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -81,6 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B23278651C760E97006B3C3D /* Accelerate.framework in Frameworks */,
+				B23278631C760E92006B3C3D /* QuartzCore.framework in Frameworks */,
 				B2726A041C63494400DF097F /* opencv2.framework in Frameworks */,
 				B207EC871C632C39006AF5F9 /* Metal.framework in Frameworks */,
 				B207EC851C632C33006AF5F9 /* MetalKit.framework in Frameworks */,
@@ -103,6 +111,8 @@
 		649587982F1CB250DB3ADFB1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B23278641C760E97006B3C3D /* Accelerate.framework */,
+				B23278621C760E92006B3C3D /* QuartzCore.framework */,
 				B2726A031C63494400DF097F /* opencv2.framework */,
 				B207EC861C632C39006AF5F9 /* Metal.framework */,
 				B207EC841C632C33006AF5F9 /* MetalKit.framework */,
@@ -190,6 +200,7 @@
 				B2DC5B311C4F4635007268BC /* DataSetViewController.swift */,
 				B2DFE2B41C4DD19300B65901 /* CaptureViewController.swift */,
 				B2088E2A1C5749C7001F4199 /* PreferenceViewController.swift */,
+				B23278601C76083A006B3C3D /* PlotView.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -381,6 +392,7 @@
 				B2DC5B371C4F4B66007268BC /* DataSet.swift in Sources */,
 				B207EC7C1C619EEE006AF5F9 /* Algorithm.swift in Sources */,
 				B2DC5B391C4F4CDC007268BC /* DataSetImage.swift in Sources */,
+				B23278611C76083A006B3C3D /* PlotView.swift in Sources */,
 				B2DFE2AE1C4D621600B65901 /* DataSetManageTableViewController.swift in Sources */,
 				B2726A081C634B4500DF097F /* OpenCVWrapper.mm in Sources */,
 			);

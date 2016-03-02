@@ -18,6 +18,9 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var captureVideoPreviewLayer:AVCaptureVideoPreviewLayer?
     var captureDevice: AVCaptureDevice?
     
+    @IBOutlet weak var plotView: PlotView!
+    @IBOutlet weak var plotViewBackgroundView: UIView!
+    
     let baseImageCount = Preference.getBaseImageCount()
     var baseImages = [UIImage]()
     var baseImageTookTime: NSDate?
@@ -53,6 +56,9 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if Preference.getCalculationDevice() == "GPU" {
             algorithm = Algorithm()
         }
+        
+        plotViewBackgroundView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
+        plotView.initPlot()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -68,6 +74,9 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         // Dispose of any resources that can be recreated.
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     // MARK: - setup views
     
     func configureVideoCapture() {
@@ -183,9 +192,8 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 } else {
                     self.images.append(image)
                     self.imageTookTimes.append(NSDate())
+                    self.addedImageCount = self.addedImageCount + 1
                 }
-                
-                self.addedImageCount = self.addedImageCount + 1
                 
                 // change button state and label text
                 NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
@@ -196,28 +204,37 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 self.calculationOperationQueue.addOperationWithBlock({ () -> Void in
                     if isBaseImage {
                         if self.baseImages.count == self.baseImageCount {
-                            let baseImageRow = Int(image.size.width)
-                            let baseImageCol = Int(image.size.height)
-                            self.baseImagePixels = [Float](count: baseImageRow * baseImageCol, repeatedValue: 0.0)
-                            for i in 0...(baseImageRow - 1) {
-                                for j in 0...(baseImageCol - 1) {
-                                    let index = j * baseImageRow + i
-                                    self.baseImagePixels![index] = 0
-                                }
-                            }
+                            let imageRow = Int(image.size.width)
+                            let imageCol = Int(image.size.height)
+                            self.baseImagePixels = [Float](count: imageRow * imageCol, repeatedValue: 0.0)
+                            
+                            // calculate sampling area range
+                            let samplePercentageRoot = Int(sqrt(Double(Preference.getSamplePercentage())))
+                            
+                            let imageRowLength = samplePercentageRoot * imageRow / 10
+                            let imageRowStart = imageRow * (10 - samplePercentageRoot) / 20
+                            let imageRowEnd = imageRowStart + imageRowLength
+                            
+                            let imageColLength = samplePercentageRoot * imageCol / 10
+                            let imageColStart = imageCol * (10 - samplePercentageRoot) / 20
+                            let imageColEnd = imageColStart + imageColLength
+                            
+                            // add pixel values
                             for baseImage in self.baseImages {
                                 let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(baseImage.CGImage))
                                 let imagePixels = CFDataGetBytePtr(pixelData)
-                                for i in 0...(baseImageRow - 1) {
-                                    for j in 0...(baseImageCol - 1) {
-                                        let index = j * baseImageRow + i
+                                for i in imageRowStart...(imageRowEnd - 1) {
+                                    for j in imageColStart...(imageColEnd - 1) {
+                                        let index = j * imageRow + i
                                         self.baseImagePixels![index] += Float(imagePixels[index * 4])
                                     }
                                 }
                             }
-                            for i in 0...(baseImageRow - 1) {
-                                for j in 0...(baseImageCol - 1) {
-                                    let index = j * baseImageRow + i
+                            
+                            // calculate the average pixel values
+                            for i in imageRowStart...(imageRowEnd - 1) {
+                                for j in imageColStart...(imageColEnd - 1) {
+                                    let index = j * imageRow + i
                                     self.baseImagePixels![index] /= Float(self.baseImageCount)
                                 }
                             }
@@ -226,6 +243,7 @@ class CaptureViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                         let correlation = self.crossCorrelation(image)
                         print("Correlation: \(correlation)")
                         self.imageCorrelations.append(correlation)
+                        self.plotView.addCorrelation(correlation)
                     }
                     self.updateStatusLabel()
                 })

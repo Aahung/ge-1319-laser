@@ -40,6 +40,8 @@ class PreferenceViewController: XLFormViewController {
         Preference.setPhotoResolution(formValues["photo-resolution"] as! String)
         Preference.setMaxShifting(formValues["max-shifting"] as! Int)
         Preference.setCalculationDevice(formValues["calculation-device"] as! String)
+        Preference.setSamplePercentage(formValues["sample-percentage"] as! Int)
+        Preference.setPlotInterval(formValues["plot-interval"] as! Int)
     }
 
     // MARK: -setup form
@@ -67,7 +69,7 @@ class PreferenceViewController: XLFormViewController {
         section.addFormRow(row)
         row = XLFormRowDescriptor(tag: "images-count", rowType: XLFormRowDescriptorTypeStepCounter, title: "Image n")
         row.value = Preference.getImageCount()
-        row.cellConfigAtConfigure.setObject(100, forKey: "stepControl.maximumValue")
+        row.cellConfigAtConfigure.setObject(400, forKey: "stepControl.maximumValue")
         row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.minimumValue")
         row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.stepValue")
         section.addFormRow(row)
@@ -105,6 +107,25 @@ class PreferenceViewController: XLFormViewController {
         row.value = Preference.getCalculationDevice()
         options = ["CPU", "GPU", "OpenCV"]
         row.selectorOptions = options
+        section.addFormRow(row)
+        
+        row = XLFormRowDescriptor(tag: "sample-percentage", rowType: XLFormRowDescriptorTypeStepCounter, title: "Sampling Percentage")
+        row.value = Preference.getSamplePercentage()
+        row.cellConfigAtConfigure.setObject(100, forKey: "stepControl.maximumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.minimumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.stepValue")
+        section.addFormRow(row)
+        
+        form.addFormSection(section)
+        
+        // Plot Settings
+        section = XLFormSectionDescriptor.formSectionWithTitle("Plot Setting") as XLFormSectionDescriptor
+        
+        row = XLFormRowDescriptor(tag: "plot-interval", rowType: XLFormRowDescriptorTypeStepCounter, title: "Plot Interval")
+        row.value = Preference.getPlotInterval()
+        row.cellConfigAtConfigure.setObject(500, forKey: "stepControl.maximumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.minimumValue")
+        row.cellConfigAtConfigure.setObject(1, forKey: "stepControl.stepValue")
         section.addFormRow(row)
         
         form.addFormSection(section)

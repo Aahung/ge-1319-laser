@@ -124,16 +124,27 @@ class Algorithm {
     }
     
     class func shiftInnerProduct(baseImagePixels: [Float], imagePixels: UnsafePointer<UInt8>, imageRow: Int, imageCol: Int, offsetI: Int, offsetJ: Int) -> Float {
+        
+        let samplePercentageRoot = Int(sqrt(Double(Preference.getSamplePercentage())))
+        
+        let imageRowLength = samplePercentageRoot * imageRow / 10
+        let imageRowStart = imageRow * (10 - samplePercentageRoot) / 20
+        let imageRowEnd = imageRowStart + imageRowLength
+        
+        let imageColLength = samplePercentageRoot * imageCol / 10
+        let imageColStart = imageCol * (10 - samplePercentageRoot) / 20
+        let imageColEnd = imageColStart + imageColLength
+        
         // 2d inner product
         // algorithm modified from http://stackoverflow.com/a/6801185/2361752
         var dotProduct: Float = 0
         var baseDotProduct: Float = 0
         var imageDotProduct: Float = 0
-        for i in 0...(imageRow - 1) {
-            for j in 0...(imageCol - 1) {
+        for i in imageRowStart...(imageRowEnd - 1) {
+            for j in imageRowStart...(imageColEnd - 1) {
                 let _i = i + offsetI
                 let _j = j + offsetJ
-                if _i < 0 || _j < 0 || _i >= imageRow || _j >= imageCol {
+                if _i < imageRowStart || _j < imageColStart || _i >= imageRowEnd || _j >= imageColEnd {
                     continue
                 }
                 let index = imageRow * j + i

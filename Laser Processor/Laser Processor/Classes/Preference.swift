@@ -16,6 +16,8 @@ let photoResolutionPresetKey = DefaultsKey<String?>("photo-resolution-preset")
 let maxShiftingKey = DefaultsKey<Int?>("max-shifting")
 let calculationDevicekey = DefaultsKey<String?>("calculation-device")
 let imageCountKey = DefaultsKey<Int?>("image-count")
+let samplePercentageKey = DefaultsKey<Int?>("sample-percentage")
+let plotIntervalKey = DefaultsKey<Int?>("plot-interval")
 
 class Preference: NSObject {
     class func getBaseImageDelay() -> Int {
@@ -46,7 +48,7 @@ class Preference: NSObject {
         if let value = Defaults[imageCountKey] {
             return value
         }
-        Defaults[imageCountKey] = 10
+        Defaults[imageCountKey] = 100
         return getImageCount()
     }
     
@@ -58,7 +60,7 @@ class Preference: NSObject {
         if let value = Defaults[shootingIntervalKey] {
             return value
         }
-        Defaults[shootingIntervalKey] = 1000
+        Defaults[shootingIntervalKey] = 100
         return getShootingInterval()
     }
     
@@ -111,5 +113,29 @@ class Preference: NSObject {
     
     class func setCalculationDevice(value: String) {
         Defaults[calculationDevicekey] = value
+    }
+    
+    class func getSamplePercentage() -> Int {
+        if let value = Defaults[samplePercentageKey] {
+            return value
+        }
+        Defaults[samplePercentageKey] = 10
+        return getSamplePercentage()
+    }
+    
+    class func setSamplePercentage(value: Int) {
+        Defaults[samplePercentageKey] = value
+    }
+    
+    class func getPlotInterval() -> Int {
+        if let value = Defaults[plotIntervalKey] {
+            return value
+        }
+        Defaults[plotIntervalKey] = 10
+        return getPlotInterval()
+    }
+    
+    class func setPlotInterval(value: Int) {
+        Defaults[plotIntervalKey] = value
     }
 }

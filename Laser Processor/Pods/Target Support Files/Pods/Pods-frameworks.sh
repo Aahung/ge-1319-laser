@@ -84,6 +84,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods/CorePlot.framework"
   install_framework "Pods/PKHUD.framework"
   install_framework "Pods/SQLite.framework"
   install_framework "Pods/SwiftyUserDefaults.framework"
@@ -92,6 +93,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/pop.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods/CorePlot.framework"
   install_framework "Pods/PKHUD.framework"
   install_framework "Pods/SQLite.framework"
   install_framework "Pods/SwiftyUserDefaults.framework"
